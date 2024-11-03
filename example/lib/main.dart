@@ -28,9 +28,6 @@ class _MyAppState extends State<MyApp> {
   // Initializes the screen recording callback.
   Future<void> initScreenRecordingCallback() async {
     try {
-      // Start listening to screen recording changes
-      await _screenRecorderApi.startListening();
-
       // Set up a StreamController for recording state changes
       _recordingSubscription = _screenRecorderApi.onScreenRecordingChangeStream
           .listen((isRecording) {
@@ -38,6 +35,9 @@ class _MyAppState extends State<MyApp> {
           screenBeingRecorded = isRecording.toString();
         });
       });
+
+      // Start listening to screen recording changes
+      _screenRecorderApi.startListening();
     } catch (e) {
       setState(() {
         screenBeingRecorded = 'Failed to add callback';
