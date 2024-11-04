@@ -27,4 +27,6 @@ flutter:
         package: com.tajaouart.screen_recorder_callback
         pluginClass: ScreenRecorderCallbackPlugin
 
-
+      ios:
+        pluginClass: ScreenRecorderCallbackPlugin
+        fileName: screen_recorder_callback.swift
