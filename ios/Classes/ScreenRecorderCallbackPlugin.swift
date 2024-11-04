@@ -35,8 +35,15 @@ public class ScreenRecorderCallbackPlugin: NSObject, FlutterPlugin, ScreenRecord
 
     @objc private func screenCaptureStatusChanged() {
         DispatchQueue.main.async {
-            self.isRecording = UIScreen.main.isCaptured
-            self.notifyFlutterOfStateChange()
+            self.updateRecordingState()
+        }
+    }
+
+    private func updateRecordingState() {
+        let currentState = UIScreen.main.isCaptured
+        if isRecording != currentState {
+            isRecording = currentState
+            notifyFlutterOfStateChange()
         }
     }
 
@@ -56,6 +63,7 @@ public class ScreenRecorderCallbackPlugin: NSObject, FlutterPlugin, ScreenRecord
     public func startListening() throws {
         isRecording = UIScreen.main.isCaptured
         notifyFlutterOfStateChange()
+        startObservingScreenRecording()
     }
 
     public func stopListening() throws {

@@ -1,7 +1,7 @@
 name: screen_recorder_callback
-description: "Screen Recorder CallBack"
+description: "Screen Recorder Callback plugin for detecting screen recording on Android and iOS."
 version: 0.0.1
-homepage:
+homepage: https://github.com/tajaouart/screen_recorder_callback
 
 environment:
   sdk: ^3.5.4
@@ -16,17 +16,20 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  pigeon:
-
+  pigeon: ^1.0.5
 
 flutter:
-
   plugin:
     platforms:
       android:
         package: com.tajaouart.screen_recorder_callback
         pluginClass: ScreenRecorderCallbackPlugin
+        # Minimum SDK 35 required for screen recording detection support
+        minSdkVersion: 35
 
       ios:
         pluginClass: ScreenRecorderCallbackPlugin
         fileName: screen_recorder_callback.swift
+        # Minimum iOS version required for screen recording detection
+        platform: ios
+        minOsVersion: '11.0'

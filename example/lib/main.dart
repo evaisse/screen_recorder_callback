@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String screenBeingRecorded = 'false';
+  bool isRecording = false;
   final ScreenRecorderCallback _screenRecorderApi = ScreenRecorderCallback();
   StreamSubscription<bool>? _recordingSubscription;
 
@@ -28,26 +28,23 @@ class _MyAppState extends State<MyApp> {
   // Initializes the screen recording callback.
   Future<void> initScreenRecordingCallback() async {
     try {
-      // Set up a StreamController for recording state changes
-      _recordingSubscription = _screenRecorderApi.onScreenRecordingChangeStream
-          .listen((isRecording) {
+      _recordingSubscription =
+          _screenRecorderApi.onScreenRecordingChangeStream.listen((recording) {
         setState(() {
-          screenBeingRecorded = isRecording.toString();
+          isRecording = recording;
         });
       });
 
-      // Start listening to screen recording changes
-      _screenRecorderApi.startListening();
+      await _screenRecorderApi.startListening();
     } catch (e) {
       setState(() {
-        screenBeingRecorded = 'Failed to add callback';
+        isRecording = false; // Show "Not Recording" on error
       });
     }
   }
 
   @override
   void dispose() {
-    // Stop listening to screen recording changes when widget is disposed
     _screenRecorderApi.stopListening();
     _recordingSubscription?.cancel();
     super.dispose();
@@ -57,11 +54,26 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Screen Recorder Callback Demo'),
-        ),
+        backgroundColor: isRecording ? Colors.red : Colors.white,
         body: Center(
-          child: Text('Screen being recorded: $screenBeingRecorded\n'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                isRecording ? Icons.videocam : Icons.videocam_off,
+                size: 80,
+                color: isRecording ? Colors.white : Colors.black54,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                isRecording ? 'Recording...' : 'Not Recording',
+                style: TextStyle(
+                  color: isRecording ? Colors.white : Colors.black54,
+                  fontSize: 24,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
